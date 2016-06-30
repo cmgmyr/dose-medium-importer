@@ -36,4 +36,14 @@ abstract class BaseCommand extends Command
 
         $this->user = $user->data;
     }
+
+    /**
+     * Returns all of the available publications for the given user.
+     *
+     * @return static
+     */
+    protected function getPublications()
+    {
+        return Collection::make($this->medium->publications($this->user->id)->data);
+    }
 }

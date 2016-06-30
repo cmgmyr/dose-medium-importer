@@ -2,7 +2,7 @@
 
 namespace Med\Console\Commands;
 
-use Illuminate\Support\Collection;
+use Med\Console\Views\PublicationView;
 
 class Publications extends BaseCommand
 {
@@ -27,11 +27,6 @@ class Publications extends BaseCommand
      */
     public function handle()
     {
-        $artisan = $this;
-
-        Collection::make($this->medium->publications($this->user->id)->data)
-            ->each(function($publication) use ($artisan) {
-                $artisan->info($publication->id . ': ' . $publication->name);
-            });
+        PublicationView::make($this, $this->getPublications())->render();
     }
 }
