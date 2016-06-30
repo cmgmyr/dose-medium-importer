@@ -1,0 +1,26 @@
+{
+    "name": "cmgmyr/medium-importer",
+    "description": "Import articles from an API to Medium",
+    "license": "MIT",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Chris Gmyr",
+            "email": "cmgmyr@gmail.com"
+        }
+    ],
+    "require": {
+        "illuminate/console": "^5.2",
+        "vlucas/phpdotenv": "^2.3",
+        "jonathantorres/medium-sdk": "^0.2.0",
+        "pimple/pimple": "^3.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Med\\": "src/"
+        }
+    },
+    "require-dev": {
+        "symfony/var-dumper": "^3.1"
+    }
+}

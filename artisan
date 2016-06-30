@@ -1,0 +1,13 @@
+#!/usr/bin/env php
+<?php
+
+require "vendor/autoload.php";
+
+$dotenv = new Dotenv\Dotenv(__DIR__);
+$dotenv->load();
+
+$artisan = new \Med\MiniArtisan();
+
+$app = $artisan->init("Mini Artisan for Medium Import", "0.0.1");
+
+$app->run();
