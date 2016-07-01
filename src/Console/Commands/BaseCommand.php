@@ -29,7 +29,7 @@ abstract class BaseCommand extends Command
         $this->medium = new Medium(getenv('MEDIUM_TOKEN'));
         $user = $this->medium->getAuthenticatedUser();
 
-        if(isset($user->errors)) {
+        if (isset($user->errors)) {
             $errors = Collection::make($user->errors);
             throw new Exception('Authentication failed. ' . $errors->first()->message);
         }
@@ -40,7 +40,7 @@ abstract class BaseCommand extends Command
     /**
      * Returns all of the available publications for the given user.
      *
-     * @return static
+     * @return Collection
      */
     protected function getPublications()
     {

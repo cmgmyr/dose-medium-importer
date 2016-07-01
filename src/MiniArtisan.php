@@ -19,6 +19,7 @@ class MiniArtisan
             $container['details'] = function ($c) use ($path) {
                 $console = new $path($c);
                 $console->setLaravel(new MiniLaravel($console));
+
                 return $console;
             };
 

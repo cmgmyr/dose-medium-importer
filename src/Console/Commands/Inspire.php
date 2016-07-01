@@ -5,10 +5,8 @@ namespace Med\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 
-
 class Inspire extends Command
 {
-
     /**
      * The console command name.
      *
@@ -53,5 +51,4 @@ class Inspire extends Command
 
         ])->random();
     }
-
 }

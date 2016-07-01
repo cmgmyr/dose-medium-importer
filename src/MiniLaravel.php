@@ -5,7 +5,6 @@ namespace Med;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 
-
 class MiniLaravel
 {
     private $command;

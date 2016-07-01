@@ -18,5 +18,4 @@ class Kernel
     {
         return $this->commands;
     }
-
 }

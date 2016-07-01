@@ -15,7 +15,7 @@ class PublicationView extends BaseView implements ViewContract
     {
         $artisan = $this->artisan;
         
-        $this->data->each(function($publication) use ($artisan) {
+        $this->data->each(function ($publication) use ($artisan) {
             $artisan->info($publication->id . ': ' . $publication->name);
         });
     }
