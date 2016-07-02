@@ -11,7 +11,6 @@ class Kernel
      */
     protected $commands = [
         \Med\Console\Commands\Import::class,
-        \Med\Console\Commands\Inspire::class,
         \Med\Console\Commands\Publications::class,
     ];
 
