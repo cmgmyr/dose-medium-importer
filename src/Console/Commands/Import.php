@@ -15,7 +15,8 @@ class Import extends BaseCommand
      * @var string
      */
     protected $signature = 'import
-                            {--L|limit= : Limit of articles you would like to import. Default 15}';
+                            {--L|limit= : Limit of articles you would like to import. Default 15}
+                            {--P|page= : Page number to use for API call. Default 1}';
 
     /**
      * The console command description.
@@ -100,8 +101,13 @@ class Import extends BaseCommand
             $limit = 15;
         }
 
-        $apiUrlCall = 'lists?id=29765';
-        $apiUrlCall = 'lists?sort=latest&posted=true&only_feed_items=true&include_content=true&page=2';
+        $page = $this->option('page');
+        if ($page === null) {
+            $page = 1;
+        }
+
+        $apiUrlCall = 'lists?id=29823&include_content=true';
+        $apiUrlCall = 'lists?sort=latest&posted=true&only_feed_items=true&include_content=true';
 //        $apiUrlCall .= '&supported_content_types=animation';
 //        $apiUrlCall .= '&supported_content_types=html';
 //        $apiUrlCall .= '&supported_content_types=image';
@@ -110,7 +116,7 @@ class Import extends BaseCommand
 //        $apiUrlCall .= '&supported_content_types=twitter';
 //        $apiUrlCall .= '&supported_content_types=video';
 
-        $response = $this->apiService->makeRequest('GET', $apiUrlCall . '&limit=' . $limit);
+        $response = $this->apiService->makeRequest('GET', $apiUrlCall . '&limit=' . $limit . '&page=' . $page);
 
         return Collection::make($response['data'])->map(function ($article) {
             return new Article($article);
