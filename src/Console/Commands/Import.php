@@ -60,7 +60,7 @@ class Import extends BaseCommand
 
         $this->comment('Great, let\'s get going!');
 
-        $selectedPublication = $publications->pull($selectedPublicationIndex);
+        $selectedPublication = $publications->pull($selectedPublicationIndex)->id;
         $articles = $this->getArticlesForImport();
 
         $progressBar = $this->output->createProgressBar($articles->count());
