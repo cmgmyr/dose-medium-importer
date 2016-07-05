@@ -12,6 +12,16 @@ class Article extends BaseEntity
      */
     public $content;
 
+    /**
+     * @var Collection
+     */
+    public $tags;
+
+    /**
+     * @var Collection
+     */
+    public $categories;
+
     public function __construct(array $data = [])
     {
         $content = array_get($data, 'content', []);

@@ -66,11 +66,16 @@ class Import extends BaseCommand
         $progressBar = $this->output->createProgressBar($articles->count());
 
         $articles->each(function ($article) use ($selectedPublication, $progressBar) {
+            $categories = $article->categories->take(5)->map(function($category) {
+                return $category->name;
+            })->toArray();
+
             $data = [
                 'title' => $article->page_title . ' (' . $article->getData()['included_content_types'] . ')',
                 'contentFormat' => 'html',
                 'content' => $article->renderHtml(),
                 'publishStatus' => 'draft',
+                'tags' => $categories,
             ];
 
             $this->medium->createPost($this->user->id, $data);
