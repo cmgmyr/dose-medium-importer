@@ -47,6 +47,7 @@ class Import extends BaseCommand
      */
     public function handle()
     {
+        $artisan = $this;
         $this->comment('Gathering available publications...');
 
         $publications = $this->getPublications();
@@ -66,8 +67,8 @@ class Import extends BaseCommand
 
         $progressBar = $this->output->createProgressBar($articles->count());
 
-        $articles->each(function ($article) use ($selectedPublication, $progressBar) {
-            $categories = $article->categories->take(5)->map(function($category) {
+        $articles->each(function ($article) use ($artisan, $selectedPublication, $progressBar) {
+            $categories = $article->categories->take(5)->map(function ($category) {
                 return $category->name;
             })->toArray();
 
@@ -79,8 +80,14 @@ class Import extends BaseCommand
                 'tags' => $categories,
             ];
 
-            $this->medium->createPost($this->user->id, $data);
-            //$this->medium->createPostUnderPublication($selectedPublication, $data);
+            $post = $this->medium->createPost($this->user->id, $data);
+            //$post = $this->medium->createPostUnderPublication($selectedPublication, $data);
+
+            if (isset($post->errors)) {
+                $errors = Collection::make($post->errors);
+                $artisan->importError($article, $errors);
+            }
+
             $progressBar->advance();
         });
 
@@ -121,5 +128,18 @@ class Import extends BaseCommand
         return Collection::make($response['data'])->map(function ($article) {
             return new Article($article);
         });
+    }
+
+    /**
+     * Outputs the import errors to the console.
+     *
+     * @param Article $article
+     * @param Collection $errors
+     */
+    protected function importError(Article $article, Collection $errors)
+    {
+        $this->error('Error: "' . $errors->first()->message . '" with article: ' . $article->id . ' - ' . $article->page_title);
+
+        // Log message and code?
     }
 }
