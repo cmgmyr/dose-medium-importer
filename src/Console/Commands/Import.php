@@ -14,7 +14,7 @@ class Import extends BaseCommand
      *
      * @var string
      */
-    protected $signature = 'import
+    protected $signature = 'medium:import
                             {--L|limit= : Limit of articles you would like to import. Default 15}
                             {--P|page= : Page number to use for API call. Default 1}';
 

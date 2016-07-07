@@ -7,11 +7,11 @@ use Med\Console\Views\PublicationView;
 class Publications extends BaseCommand
 {
     /**
-     * The console command name.
+     * The name and signature of the console command.
      *
      * @var string
      */
-    protected $name = 'publications';
+    protected $signature = 'medium:publications';
 
     /**
      * The console command description.

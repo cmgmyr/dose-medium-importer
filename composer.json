@@ -1,27 +1,30 @@
 {
-    "name": "cmgmyr/medium-importer",
-    "description": "Import articles from an API to Medium",
+    "name": "laravel/lumen",
+    "description": "The Laravel Lumen Framework.",
+    "keywords": ["framework", "laravel", "lumen"],
     "license": "MIT",
     "type": "project",
-    "authors": [
-        {
-            "name": "Chris Gmyr",
-            "email": "cmgmyr@gmail.com"
-        }
-    ],
     "require": {
-        "illuminate/console": "^5.2",
-        "vlucas/phpdotenv": "^2.3",
-        "jonathantorres/medium-sdk": "^0.2.0",
-        "pimple/pimple": "^3.0"
+        "php": ">=5.5.9",
+        "laravel/lumen-framework": "5.2.*",
+        "vlucas/phpdotenv": "~2.2",
+        "jonathantorres/medium-sdk": "^0.2.0"
+    },
+    "require-dev": {
+        "fzaninotto/faker": "~1.4",
+        "phpunit/phpunit": "~4.0",
+        "friendsofphp/php-cs-fixer": "^1.11"
     },
     "autoload": {
         "psr-4": {
+            "App\\": "app/",
             "Med\\": "src/"
         }
     },
-    "require-dev": {
-        "symfony/var-dumper": "^3.1",
-        "friendsofphp/php-cs-fixer": "^1.11"
+    "autoload-dev": {
+        "classmap": [
+            "tests/",
+            "database/"
+        ]
     }
 }
