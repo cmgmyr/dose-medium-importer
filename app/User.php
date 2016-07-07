@@ -8,9 +8,7 @@ use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Lumen\Auth\Authorizable;
 
-class User extends Model implements
-    AuthenticatableContract,
-    AuthorizableContract
+class User extends Model implements AuthenticatableContract, AuthorizableContract
 {
     use Authenticatable, Authorizable;
 
@@ -20,7 +18,7 @@ class User extends Model implements
      * @var array
      */
     protected $fillable = [
-        'name', 'email',
+        'name', 'token',
     ];
 
     /**
@@ -29,6 +27,6 @@ class User extends Model implements
      * @var array
      */
     protected $hidden = [
-        'password',
+        'token',
     ];
 }
