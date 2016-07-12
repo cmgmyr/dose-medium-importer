@@ -17,7 +17,6 @@ class ApiService
                 'Content-Type' => 'application/json',
                 'Accept' => 'application/json',
                 'Accept-Charset' => 'utf-8',
-//                'User-Agent' => getenv('API_USER_AGENT'),
             ],
         ]);
     }
