@@ -1,5 +1,10 @@
 # Medium Importer Challenge
 
+## Available Commands
+
+    # Add a user to the system
+    php artisan medium:user "Chris Gmyr" TOKEN_HERE
+
 ## Todo:
 
 - [ ] ~~Handle Tags~~ (use categories instead)

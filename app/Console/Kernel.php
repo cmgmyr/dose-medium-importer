@@ -15,6 +15,7 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         \Med\Console\Commands\Import::class,
         \Med\Console\Commands\Publications::class,
+        \Med\Console\Commands\User::class,
     ];
 
     /**
