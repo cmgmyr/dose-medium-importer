@@ -2,12 +2,15 @@
 
 namespace Med\Console\Commands;
 
+use App\Article as ImportedArticle;
+use App\User as UserModel;
+use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
-use Med\Console\Views\PublicationIndexView;
 use Med\Entities\Article;
 use Med\Services\ApiService;
+use Med\Services\MediumService;
 
-class Import extends BaseCommand
+class Import extends Command
 {
     /**
      * The name and signature of the console command.
@@ -16,7 +19,8 @@ class Import extends BaseCommand
      */
     protected $signature = 'medium:import
                             {--L|limit= : Limit of articles you would like to import. Default 15}
-                            {--P|page= : Page number to use for API call. Default 1}';
+                            {--U|user= : User id to use from the system}
+                            {--P|publication= : Publication id to use. Ignore if publishing to user profile}';
 
     /**
      * The console command description.
@@ -48,26 +52,32 @@ class Import extends BaseCommand
     public function handle()
     {
         $artisan = $this;
-        $this->comment('Gathering available publications...');
 
-        $publications = $this->getPublications();
-        PublicationIndexView::make($this, $publications)->render();
+        $this->info('Authenticating users...');
 
-        $selectedPublicationIndex = $this->ask('What publication would you like to import to?', 0);
+        $userId = $this->option('user');
+        if ($userId !== null) {
+            $user = UserModel::find($userId);
+            if (!$user) {
+                $this->error('The given user id is incorrect.');
+                exit();
+            }
 
-        if ($selectedPublicationIndex >= $publications->count()) {
-            $this->error('Sorry, your selection is not valid. Please rerun the command.');
-            exit();
+            $userToken = $user->medium_token;
+            $medium = new MediumService($userToken);
         }
+        $this->info('Authentication complete');
 
-        $this->comment('Great, let\'s get going!');
+        $publicationId = $this->option('publication');
 
-        $selectedPublication = $publications->pull($selectedPublicationIndex)->id;
+        $this->info('Gathering articles for import...');
+
         $articles = $this->getArticlesForImport();
-
         $progressBar = $this->output->createProgressBar($articles->count());
+        $this->info('Gathering articles complete');
 
-        $articles->each(function ($article) use ($artisan, $selectedPublication, $progressBar) {
+        $this->info('Importing articles to Medium...');
+        $articles->each(function ($article) use ($artisan, $medium, $publicationId, $progressBar) {
             $categories = $article->categories->take(5)->map(function ($category) {
                 return $category->name;
             })->toArray();
@@ -80,12 +90,21 @@ class Import extends BaseCommand
                 'tags' => $categories,
             ];
 
-            $post = $this->medium->createPost($this->user->id, $data);
-            //$post = $this->medium->createPostUnderPublication($selectedPublication, $data);
+            if ($publicationId !== null) {
+                $post = $medium->createPostUnderPublication($publicationId, $data);
+            } else {
+                $post = $medium->createPost($medium->user->id, $data);
+            }
 
             if (isset($post->errors)) {
                 $errors = Collection::make($post->errors);
                 $artisan->importError($article, $errors);
+            } else {
+                ImportedArticle::create([
+                    'previous_id' => $article->id,
+                    'medium_id' => $post->data->id,
+                    'medium_url' => $post->data->url,
+                ]);
             }
 
             $progressBar->advance();
@@ -108,22 +127,12 @@ class Import extends BaseCommand
             $limit = 15;
         }
 
-        $page = $this->option('page');
-        if ($page === null) {
-            $page = 1;
-        }
+        $previous = ImportedArticle::select('previous_id')->get()->implode('previous_id', ',');
 
         $apiUrlCall = 'lists?id=29823&include_content=true';
         $apiUrlCall = 'lists?sort=latest&posted=true&only_feed_items=true&include_content=true';
-//        $apiUrlCall .= '&supported_content_types=animation';
-//        $apiUrlCall .= '&supported_content_types=html';
-//        $apiUrlCall .= '&supported_content_types=image';
-//        $apiUrlCall .= '&supported_content_types=instagram';
-//        $apiUrlCall .= '&supported_content_types=text';
-//        $apiUrlCall .= '&supported_content_types=twitter';
-//        $apiUrlCall .= '&supported_content_types=video';
 
-        $response = $this->apiService->makeRequest('GET', $apiUrlCall . '&limit=' . $limit . '&page=' . $page);
+        $response = $this->apiService->makeRequest('GET', $apiUrlCall . '&limit=' . $limit . '&blacklist=' . $previous);
 
         return Collection::make($response['data'])->map(function ($article) {
             return new Article($article);

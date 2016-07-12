@@ -11,6 +11,19 @@
     # Get all publications for the given user
     php artisan medium:publications -U USER_ID
     php artisan medium:publications -T MEDIUM_TOKEN
+    
+    # Import as single user to their profile
+    php artisan medium:import -U USER_ID
+    
+    # Import as single user to publication
+    php artisan medium:import -U USER_ID -P PUBLICATION_ID
+
+## Suggested Process
+
+1. Add all users to system via `medium:user` command
+2. Verify that all users are within system via `medium:users` command
+3. Get publication id from `medium:publications` command with the given user id or token
+4. Import articles based on any of the `medium:import` command options
 
 ## Todo:
 
