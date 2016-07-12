@@ -3,7 +3,10 @@
 ## Available Commands
 
     # Add a user to the system
-    php artisan medium:user "Chris Gmyr" TOKEN_HERE
+    php artisan medium:user "Chris Gmyr" MEDIUM_TOKEN
+    
+    # View all system users
+    php artisan medium:users
 
 ## Todo:
 

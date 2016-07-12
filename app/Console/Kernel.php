@@ -16,6 +16,7 @@ class Kernel extends ConsoleKernel
         \Med\Console\Commands\Import::class,
         \Med\Console\Commands\Publications::class,
         \Med\Console\Commands\User::class,
+        \Med\Console\Commands\Users::class,
     ];
 
     /**
