@@ -83,6 +83,7 @@ class Article extends BaseEntity
             'page_title'             => 'required|string',
             'created_date'           => 'required|integer',
 
+            'author_name'            => 'string',
             'categories'             => 'array',
             'description'            => 'string',
             'scrape_source'          => 'string',

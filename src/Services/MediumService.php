@@ -44,14 +44,13 @@ class MediumService
     /**
      * Create a post on the authenticated user's profile.
      *
-     * @param string $authorId
      * @param array $data
      *
      * @return StdClass
      */
-    public function createPost($authorId, array $data)
+    public function createPost(array $data)
     {
-        return $this->medium->createPost($authorId, $data);
+        return $this->medium->createPost($this->user->id, $data);
     }
 
     /**

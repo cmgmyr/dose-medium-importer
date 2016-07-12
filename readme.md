@@ -13,10 +13,16 @@
     php artisan medium:publications -T MEDIUM_TOKEN
     
     # Import as single user to their profile
-    php artisan medium:import -U USER_ID
+    php artisan medium:import-to-user -U USER_ID
     
     # Import as single user to publication
-    php artisan medium:import -U USER_ID -P PUBLICATION_ID
+    php artisan medium:import-to-user -U USER_ID -P PUBLICATION_ID
+    
+    # Import articles to each system user
+    php artisan medium:import
+    
+    # Import articles to each system user to a publication
+    php artisan medium:import -P PUBLICATION_ID
 
 ## Suggested Process
 

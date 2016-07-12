@@ -10,15 +10,16 @@ use Med\Entities\Article;
 use Med\Services\ApiService;
 use Med\Services\MediumService;
 
-class Import extends Command
+class ImportToUser extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'medium:import
+    protected $signature = 'medium:import-to-user
                             {--L|limit= : Limit of articles you would like to import. Default 15}
+                            {--U|user= : User id to use from the system}
                             {--P|publication= : Publication id to use. Ignore if publishing to user profile}';
 
     /**
@@ -52,20 +53,20 @@ class Import extends Command
     {
         $artisan = $this;
 
-        $this->info('Authenticating users...');
+        $this->info('Authenticating user...');
 
-        $authenticatedUsers = UserModel::all()->map(function ($user) use ($artisan) {
-            try {
-                $medium = new MediumService($user->medium_token);
-
-                return ['name' => $user->name, 'medium' => $medium];
-            } catch (\Exception $e) {
-                \Log::error($user->name . ' (ID: ' . $user->id . ') was not authenticated. Please check token.');
+        $userId = $this->option('user');
+        if ($userId !== null) {
+            $user = UserModel::find($userId);
+            if (!$user) {
+                $this->error('The given user id is incorrect.');
+                exit();
             }
-        });
 
-        if ($authenticatedUsers->count() == 0) {
-            $this->error('Sorry, there are no authenticated users in the system. Please add some or check token data.');
+            $userToken = $user->medium_token;
+            $medium = new MediumService($userToken);
+        } else {
+            $this->error('You must specify a valid user id.');
             exit;
         }
         $this->info('Authentication complete');
@@ -79,17 +80,7 @@ class Import extends Command
         $this->info('Gathering articles complete');
 
         $this->info('Importing articles to Medium...');
-        $articles->each(function ($article) use ($artisan, $authenticatedUsers, $publicationId, $progressBar) {
-
-            // is the author in our system?
-            $author = $authenticatedUsers->where('name', $article->author_name)->first();
-            if ($author === null) {
-                \Log::error($article->author_name . ' not in system...skipping article.');
-                $progressBar->advance();
-
-                return;
-            }
-
+        $articles->each(function ($article) use ($artisan, $medium, $publicationId, $progressBar) {
             $categories = $article->categories->take(5)->map(function ($category) {
                 return $category->name;
             })->toArray();
@@ -103,9 +94,9 @@ class Import extends Command
             ];
 
             if ($publicationId !== null) {
-                $post = $author['medium']->createPostUnderPublication($publicationId, $data);
+                $post = $medium->createPostUnderPublication($publicationId, $data);
             } else {
-                $post = $author['medium']->createPost($data);
+                $post = $medium->createPost($data);
             }
 
             if (isset($post->errors)) {
