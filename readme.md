@@ -7,6 +7,10 @@
     
     # View all system users
     php artisan medium:users
+    
+    # Get all publications for the given user
+    php artisan medium:publications -U USER_ID
+    php artisan medium:publications -T MEDIUM_TOKEN
 
 ## Todo:
 
