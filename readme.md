@@ -5,6 +5,9 @@
     # Add a user to the system
     php artisan users:create "Chris Gmyr" MEDIUM_TOKEN
     
+    # Delete a user from the system
+    php artisan users:delete USER_ID
+    
     # View all system users
     php artisan users:all
     
