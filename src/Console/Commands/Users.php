@@ -12,7 +12,7 @@ class Users extends Command
      *
      * @var string
      */
-    protected $signature = 'medium:users';
+    protected $signature = 'users:all';
 
     /**
      * The console command description.

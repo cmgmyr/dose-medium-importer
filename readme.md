@@ -3,10 +3,10 @@
 ## Available Commands
 
     # Add a user to the system
-    php artisan medium:user "Chris Gmyr" MEDIUM_TOKEN
+    php artisan users:create "Chris Gmyr" MEDIUM_TOKEN
     
     # View all system users
-    php artisan medium:users
+    php artisan users:all
     
     # Get all publications for the given user
     php artisan medium:publications -U USER_ID

@@ -12,7 +12,7 @@ class User extends Command
      *
      * @var string
      */
-    protected $signature = 'medium:user
+    protected $signature = 'users:create
                             {name : Name of the user }
                             {token : Medium Token for the user }';
 
