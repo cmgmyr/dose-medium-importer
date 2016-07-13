@@ -123,6 +123,35 @@ class Article extends BaseEntity
     }
 
     /**
+     * Returns the categories on the article as an array.
+     *
+     * @param int $limit
+     * @return array
+     */
+    public function getCategoriesArray($limit = 5)
+    {
+        return $this->categories->take($limit)->map(function ($category) {
+            return $category->name;
+        })->toArray();
+    }
+
+    /**
+     * Returns the data array to use to post to Medium.
+     *
+     * @return array
+     */
+    public function buildDataForMedium()
+    {
+        return [
+            'title' => $this->page_title . ' (' . $this->getData()['included_content_types'] . ')',
+            'contentFormat' => 'html',
+            'content' => $this->renderHtml(),
+            'publishStatus' => 'draft',
+            'tags' => $this->getCategoriesArray(),
+        ];
+    }
+
+    /**
      * Returns the HTML content for the entity.
      *
      * @return string
