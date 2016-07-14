@@ -43,3 +43,4 @@
 - [x] ~~Ask to post to individual account vs publication~~
 - [x] Handle error output
 - [ ] Cleanup & Refactoring
+- [x] Use CSV for users seeder

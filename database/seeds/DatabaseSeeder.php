@@ -1,6 +1,8 @@
 <?php
 
+use App\User;
 use Illuminate\Database\Seeder;
+use League\Csv\Reader;
 
 class DatabaseSeeder extends Seeder
 {
@@ -11,6 +13,18 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // $this->call('UserTableSeeder');
+        User::truncate();
+
+        $reader = Reader::createFromPath(base_path('data/users.csv'));
+
+        // skip the header
+        $all = $reader->setOffset(1)->fetchAll();
+
+        collect($all)->each(function ($user) {
+            User::create([
+                'name' => $user[0],
+                'medium_token' => $user[1],
+            ]);
+        });
     }
 }
