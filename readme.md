@@ -27,9 +27,30 @@
     # Import articles to each system user to a publication
     php artisan medium:import -P PUBLICATION_ID
 
+## Setup
+
+    # Clone repo
+    $ git clone REPO_URL medium && cd medium
+    
+    # Copy .env example
+    $ cp .env.example .env
+    # Update API_URL to point to the API's base URL
+    
+    # Install Dependencies
+    $ composer install
+    
+    # Create & migrate DB
+    $ touch data/medium.sqlite
+    $ php artisan migrate
+    
+    # Optional user csv import
+    # 1. Add data/users.csv with the format of: Name, Token (with header row)
+    # 2. Run:
+    $ php artisan db:seed
+
 ## Suggested Process
 
-1. Add all users to system via `medium:user` command
+1. Add all users to system via `medium:user` command, or use the `.csv` import option via database seeder
 2. Verify that all users are within system via `medium:users` command
 3. Get publication id from `medium:publications` command with the given user id or token
 4. Import articles based on any of the `medium:import` command options
