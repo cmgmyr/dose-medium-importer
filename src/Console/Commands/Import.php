@@ -4,7 +4,6 @@ namespace Med\Console\Commands;
 
 use App\User as UserModel;
 use Illuminate\Support\Collection;
-use Med\Entities\Article;
 use Med\Services\MediumService;
 
 class Import extends BaseImport
