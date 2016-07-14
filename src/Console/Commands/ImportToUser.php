@@ -31,14 +31,12 @@ class ImportToUser extends BaseImport
      */
     public function handle()
     {
-        $artisan = $this;
-
         $medium = $this->authenticateUser();
         $articles = $this->getArticlesForImport();
 
         $this->info('Importing articles to Medium...');
-        $articles->each(function ($article) use ($artisan, $medium) {
-            $artisan->publishArticle($article, $medium);
+        $articles->each(function ($article) use ($medium) {
+            $this->publishArticle($article, $medium);
         });
 
         $this->progressBar->finish();

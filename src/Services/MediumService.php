@@ -14,7 +14,7 @@ class MediumService
     public $medium;
 
     /**
-     * @var \JonathanTorres\MediumSdk\StdClass
+     * @var \stdClass
      */
     public $user;
 
@@ -46,7 +46,7 @@ class MediumService
      *
      * @param array $data
      *
-     * @return StdClass
+     * @return \stdClass
      */
     public function createPost(array $data)
     {
@@ -59,7 +59,7 @@ class MediumService
      * @param string $publicationId
      * @param array $data
      *
-     * @return StdClass
+     * @return \stdClass
      */
     public function createPostUnderPublication($publicationId, array $data)
     {

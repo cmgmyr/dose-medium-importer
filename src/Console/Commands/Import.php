@@ -32,24 +32,29 @@ class Import extends BaseImport
      */
     public function handle()
     {
-        $artisan = $this;
-
         $authenticatedUsers = $this->authenticateUsers();
         $articles = $this->getArticlesForImport();
 
         $this->info('Importing articles to Medium...');
-        $articles->each(function ($article) use ($artisan, $authenticatedUsers) {
-            // is the author in our system?
+        $articles->map(function ($article) use ($authenticatedUsers) {
             $author = $authenticatedUsers->where('name', $article->author_name)->first();
             if ($author === null) {
                 \Log::error($article->author_name . ' not in system...skipping article.');
-                $artisan->progressBar->advance();
+                $this->progressBar->advance();
 
                 return;
             }
-            $medium = $author['medium'];
 
-            $artisan->publishArticle($article, $medium);
+            $article->medium = $author['medium'];
+
+            return $article;
+        })
+        ->each(function ($article) {
+            if ($article === null) {
+                return;
+            }
+
+            $this->publishArticle($article, $article->medium);
         });
 
         $this->progressBar->finish();
