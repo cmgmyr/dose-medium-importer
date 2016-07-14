@@ -50,11 +50,8 @@ class Import extends BaseImport
 
             return $article;
         })
+        ->filter()
         ->each(function ($article) {
-            if ($article === null) {
-                return;
-            }
-
             $this->publishArticle($article, $article->medium);
         });
 
