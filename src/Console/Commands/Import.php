@@ -41,6 +41,7 @@ class Import extends BaseImport
             if ($author === null) {
                 \Log::error($article->author_name . ' not in system...skipping article.');
                 $this->progressBar->advance();
+                $this->errorCount++;
 
                 return;
             }
@@ -57,9 +58,7 @@ class Import extends BaseImport
             $this->publishArticle($article, $article->medium);
         });
 
-        $this->progressBar->finish();
-        $this->info('');
-        $this->info('Import completed!');
+        $this->finishImport();
     }
 
     /**

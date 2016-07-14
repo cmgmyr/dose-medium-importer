@@ -39,9 +39,7 @@ class ImportToUser extends BaseImport
             $this->publishArticle($article, $medium);
         });
 
-        $this->progressBar->finish();
-        $this->info('');
-        $this->info('Import completed!');
+        $this->finishImport();
     }
 
     /**

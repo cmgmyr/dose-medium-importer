@@ -22,6 +22,16 @@ class BaseImport extends Command
      */
     protected $progressBar;
 
+    /**
+     * @var int
+     */
+    protected $successCount = 0;
+
+    /**
+     * @var int
+     */
+    protected $errorCount = 0;
+
     public function __construct()
     {
         parent::__construct();
@@ -89,12 +99,14 @@ class BaseImport extends Command
         if (isset($post->errors)) {
             $errors = Collection::make($post->errors);
             $this->importError($article, $errors);
+            $this->errorCount++;
         } else {
             ArticleModel::create([
                 'previous_id' => $article->id,
                 'medium_id' => $post->data->id,
                 'medium_url' => $post->data->url,
             ]);
+            $this->successCount++;
         }
 
         $this->progressBar->advance();
@@ -108,5 +120,22 @@ class BaseImport extends Command
     protected function getPublicationId()
     {
         return $this->option('publication');
+    }
+
+    /**
+     * Completes the import CLI prompt.
+     */
+    protected function finishImport()
+    {
+        $this->progressBar->finish();
+        $this->info('');
+        $this->info('Process completed...');
+        if ($this->successCount > 0) {
+            $this->info($this->successCount . ' articles imported successfully');
+        }
+
+        if ($this->errorCount > 0) {
+            $this->error($this->errorCount . ' articles failed to import');
+        }
     }
 }
