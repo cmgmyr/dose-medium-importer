@@ -38,7 +38,13 @@ class MediumService
      */
     public function getPublications()
     {
-        return Collection::make($this->medium->publications($this->user->id)->data);
+        return Collection::make($this->medium->publications($this->user->id)->data)
+        ->map(function ($publication) {
+            return [
+                'id' => $publication->id,
+                'name' => $publication->name,
+            ];
+        });
     }
 
     /**

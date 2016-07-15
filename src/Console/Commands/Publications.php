@@ -4,7 +4,6 @@ namespace Med\Console\Commands;
 
 use App\User as UserModel;
 use Illuminate\Console\Command;
-use Med\Console\Views\PublicationView;
 use Med\Services\MediumService;
 
 class Publications extends Command
@@ -52,6 +51,7 @@ class Publications extends Command
         }
 
         $medium = new MediumService($userToken);
-        PublicationView::make($this, $medium->getPublications())->render();
+
+        $this->table(['ID', 'Name'], $medium->getPublications()->toArray());
     }
 }
