@@ -22,8 +22,8 @@ class DatabaseSeeder extends Seeder
 
         collect($all)->each(function ($user) {
             User::create([
-                'name' => $user[0],
-                'medium_token' => $user[1],
+                'name' => trim($user[0]),
+                'medium_token' => trim($user[1]),
             ]);
         });
     }
