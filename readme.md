@@ -65,3 +65,5 @@
 - [x] Handle error output
 - [ ] Cleanup & Refactoring
 - [x] Use CSV for users seeder
+- [ ] Import articles by CSV file
+- [ ] Better handle authentication and blacklisted performance
