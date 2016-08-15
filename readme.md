@@ -35,6 +35,9 @@
     
     # Verify that all Medium Tokens in the system are valid
     php artisan medium:verify-tokens
+    
+    # Verify that all authors from the API have Medium Tokens
+    php artisan medium:verify-authors
 
 ## Setup
 
