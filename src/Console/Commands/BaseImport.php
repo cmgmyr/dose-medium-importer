@@ -87,9 +87,12 @@ class BaseImport extends Command
      *
      * @param Article $article
      * @param MediumService $medium
+     * @return bool
      */
     protected function publishArticle(Article $article, MediumService $medium)
     {
+        $success = true;
+
         if ($this->getPublicationId() !== null) {
             $post = $medium->createPostUnderPublication($this->getPublicationId(), $article->buildDataForMedium());
         } else {
@@ -100,6 +103,7 @@ class BaseImport extends Command
             $errors = Collection::make($post->errors);
             $this->importError($article, $errors);
             $this->errorCount++;
+            $success = false;
         } else {
             ArticleModel::create([
                 'previous_id' => $article->id,
@@ -110,6 +114,8 @@ class BaseImport extends Command
         }
 
         $this->progressBar->advance();
+
+        return $success;
     }
 
     /**
