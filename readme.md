@@ -26,6 +26,12 @@
     
     # Import articles to each system user to a publication
     php artisan medium:import -P PUBLICATION_ID
+    
+    # Import articles from the CSV/Pending table to the users
+    php artisan medium:import-ids
+    
+    # Import articles from the CSV/Pending table to a publication
+    php artisan medium:import-ids -P PUBLICATION_ID
 
 ## Setup
 
@@ -47,6 +53,11 @@
     # 1. Add data/users.csv with the format of: Name, Token (with header row)
     # 2. Run:
     $ php artisan db:seed
+    
+    # Optional article id import
+    # 1. Add data/ids.csv with the format of: Article_id (with header row)
+    # 2. Run:
+    $ php artisan db:seed
 
 ## Suggested Process
 
@@ -65,5 +76,5 @@
 - [x] Handle error output
 - [ ] Cleanup & Refactoring
 - [x] Use CSV for users seeder
-- [ ] Import articles by CSV file
+- [x] Import articles by CSV file
 - [ ] Better handle authentication and blacklisted performance
