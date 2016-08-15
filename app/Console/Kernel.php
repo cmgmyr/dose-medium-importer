@@ -20,6 +20,8 @@ class Kernel extends ConsoleKernel
         \Med\Console\Commands\User::class,
         \Med\Console\Commands\UserDelete::class,
         \Med\Console\Commands\Users::class,
+        \Med\Console\Commands\VerifyAuthors::class,
+        \Med\Console\Commands\VerifyAuthTokens::class,
     ];
 
     /**

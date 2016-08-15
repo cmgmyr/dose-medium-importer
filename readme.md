@@ -32,6 +32,12 @@
     
     # Import articles from the CSV/Pending table to a publication
     php artisan medium:import-ids -P PUBLICATION_ID
+    
+    # Verify that all Medium Tokens in the system are valid
+    php artisan medium:verify-tokens
+    
+    # Verify that all authors from the API have Medium Tokens
+    php artisan medium:verify-authors
 
 ## Setup
 
