@@ -6,6 +6,7 @@ use App\Pending;
 use App\User as UserModel;
 use Illuminate\Support\Collection;
 use Med\Entities\Article;
+use Med\Services\ApiService;
 use Med\Services\MediumService;
 
 class ImportIds extends BaseImport
@@ -27,6 +28,21 @@ class ImportIds extends BaseImport
     protected $description = 'Imports some articles to Medium';
 
     /**
+     * @var Collection
+     */
+    protected $apiServices;
+
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->apiServices = collect([
+            'DOSE' => new ApiService(getenv('DOSE_URL')),
+            'OMG' => new ApiService(getenv('OMG_URL')),
+        ]);
+    }
+
+    /**
      * Execute the console command.
      *
      * @return mixed
@@ -40,7 +56,7 @@ class ImportIds extends BaseImport
         $articles->map(function ($article) use ($authenticatedUsers) {
             $author = $authenticatedUsers->where('name', $article->author_name)->first();
             if ($author === null) {
-                \Log::error($article->author_name . ' not in system...skipping article.');
+                \Log::error($article->author_name . ' not in system...skipping article (ID: ' . $article->id . ').');
                 $this->progressBar->advance();
                 $this->errorCount++;
 
@@ -108,16 +124,17 @@ class ImportIds extends BaseImport
             $limit = 15;
         }
 
-        $ids = Pending::where('imported', false)->where('skipped', false)->take($limit)->pluck('article_id');
+        $pending = Pending::where('imported', false)->where('skipped', false)->orderBy('id', 'ASC')->take($limit)->get();
 
-        $articles = $ids->map(function($id) {
-            $apiUrlCall = 'lists/' . $id . '?include_content=true';
-            $response = $this->apiService->makeRequest('GET', $apiUrlCall);
-
+        $articles = $pending->map(function($article) {
             try {
+                $apiUrlCall = 'lists/' . $article->article_id . '?include_content=true';
+                $response = $this->apiServices->get($article->site, 'DOSE')->makeRequest('GET', $apiUrlCall);
+
                 return new Article($response['data']);
             } catch (\Exception $e) {
-                $this->skipPending($id);
+                $this->skipPending($article->article_id);
+                \Log::error($e->getMessage());
 
                 return;
             }
@@ -129,6 +146,11 @@ class ImportIds extends BaseImport
         return $articles;
     }
 
+    /**
+     * Mark article as skipped.
+     *
+     * @param $id
+     */
     private function skipPending($id)
     {
         $pending = Pending::where('article_id', $id)->first();
@@ -136,6 +158,11 @@ class ImportIds extends BaseImport
         $pending->save();
     }
 
+    /**
+     * Mark article as completed.
+     *
+     * @param $id
+     */
     private function completePending($id)
     {
         $pending = Pending::where('article_id', $id)->first();
