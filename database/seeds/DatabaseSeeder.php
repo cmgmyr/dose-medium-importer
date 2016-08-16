@@ -1,9 +1,6 @@
 <?php
 
-use App\Pending;
-use App\User;
 use Illuminate\Database\Seeder;
-use League\Csv\Reader;
 
 class DatabaseSeeder extends Seeder
 {
@@ -14,31 +11,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        User::truncate();
-
-        $reader = Reader::createFromPath(base_path('data/users.csv'));
-
-        // skip the header
-        $all = $reader->setOffset(1)->fetchAll();
-
-        collect($all)->each(function ($user) {
-            User::create([
-                'name' => trim($user[0]),
-                'medium_token' => trim($user[1]),
-            ]);
-        });
-
-        Pending::truncate();
-
-        $reader = Reader::createFromPath(base_path('data/ids.csv'));
-
-        // skip the header
-        $all = $reader->setOffset(1)->fetchAll();
-
-        collect($all)->each(function ($article) {
-            Pending::create([
-                'article_id' => trim($article[0]),
-            ]);
-        });
+        $this->call(UsersTableSeeder::class);
+        $this->call(PendingTableSeeder::class);
     }
 }

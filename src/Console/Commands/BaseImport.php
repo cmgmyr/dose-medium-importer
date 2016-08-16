@@ -3,6 +3,7 @@
 namespace Med\Console\Commands;
 
 use App\Article as ArticleModel;
+use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Med\Entities\Article;
@@ -107,6 +108,7 @@ class BaseImport extends Command
         } else {
             ArticleModel::create([
                 'previous_id' => $article->id,
+                'original_date' => Carbon::createFromTimestamp($article->post_date),
                 'medium_id' => $post->data->id,
                 'medium_url' => $post->data->url,
             ]);

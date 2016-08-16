@@ -61,7 +61,7 @@
     $ php artisan db:seed
     
     # Optional article id import
-    # 1. Add data/ids.csv with the format of: Article_id (with header row)
+    # 1. Add data/ids.csv with the format of: Article_id, Site (with header row)
     # 2. Run:
     $ php artisan db:seed
 

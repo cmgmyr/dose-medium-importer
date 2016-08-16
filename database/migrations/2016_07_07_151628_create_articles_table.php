@@ -15,6 +15,7 @@ class CreateArticlesTable extends Migration
         Schema::create('articles', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('previous_id');
+            $table->dateTime('original_date');
             $table->string('medium_id');
             $table->string('medium_url');
             $table->timestamps();

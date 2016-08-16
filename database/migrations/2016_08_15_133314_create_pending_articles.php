@@ -14,6 +14,7 @@ class CreatePendingArticles extends Migration
     {
         Schema::create('pending', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('site');
             $table->integer('article_id');
             $table->boolean('imported')->default(false);
             $table->boolean('skipped')->default(false);
