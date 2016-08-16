@@ -4,9 +4,12 @@ namespace Med\Entities;
 
 use Exception;
 use Illuminate\Support\Collection;
+use Med\Entities\Traits\ImageAlterationTrait;
 
 class Article extends BaseEntity
 {
+    use ImageAlterationTrait;
+
     /**
      * @var Collection
      */
@@ -143,7 +146,7 @@ class Article extends BaseEntity
     public function buildDataForMedium()
     {
         return [
-            'title' => $this->page_title . ' (' . $this->getData()['included_content_types'] . ')',
+            'title' => $this->page_title,
             'contentFormat' => 'html',
             'content' => $this->renderHtml(),
             'publishStatus' => 'draft',
@@ -158,7 +161,15 @@ class Article extends BaseEntity
      */
     public function renderHtml()
     {
-        $html = '<h1>' . $this->page_title . ' (Dose ID: ' . $this->id . ')</h1>';
+        $html = '';
+
+        if ($this->promo_img != '') {
+            $html .= '<img src="' .
+                $this->fullCloudinary($this->promo_img, 'c_fit,f_auto,fl_lossy,q_100,w_1500') .
+                '">';
+        }
+
+        $html .= '<h1>' . $this->page_title . '</h1>';
 
         if ($this->description != '') {
             $html .= '<p>' . $this->description . '</p>';
