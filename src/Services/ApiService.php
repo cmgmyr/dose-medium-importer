@@ -6,13 +6,16 @@ use GuzzleHttp\Client as GuzzleClient;
 
 class ApiService
 {
+
     /**
      * ApiService constructor.
+     *
+     * @param null|string $url
      */
-    public function __construct()
+    public function __construct($url = null)
     {
         $this->client = new GuzzleClient([
-            'base_uri' => getenv('API_URL'),
+            'base_uri' => $url ?: getenv('DOSE_URL'),
             'headers' => [
                 'Content-Type' => 'application/json',
                 'Accept' => 'application/json',
