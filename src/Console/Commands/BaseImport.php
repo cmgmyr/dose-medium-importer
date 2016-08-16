@@ -88,14 +88,19 @@ class BaseImport extends Command
      *
      * @param Article $article
      * @param MediumService $medium
+     * @param null|string $publication
      * @return bool
      */
-    protected function publishArticle(Article $article, MediumService $medium)
+    protected function publishArticle(Article $article, MediumService $medium, $publication = null)
     {
         $success = true;
 
         if ($this->getPublicationId() !== null) {
-            $post = $medium->createPostUnderPublication($this->getPublicationId(), $article->buildDataForMedium());
+            $publication = $this->getPublicationId();
+        }
+
+        if ($publication !== null) {
+            $post = $medium->createPostUnderPublication($publication, $article->buildDataForMedium());
         } else {
             $post = $medium->createPost($article->buildDataForMedium());
         }

@@ -37,8 +37,14 @@ class ImportIds extends BaseImport
         parent::__construct();
 
         $this->apiServices = collect([
-            'DOSE' => new ApiService(getenv('DOSE_URL')),
-            'OMG' => new ApiService(getenv('OMG_URL')),
+            'DOSE' => [
+                'client' => new ApiService(getenv('DOSE_URL')),
+                'publication' => getenv('DOSE_PUBLICATION'),
+            ],
+            'OMG' => [
+                'client' => new ApiService(getenv('OMG_URL')),
+                'publication' => getenv('OMG_PUBLICATION'),
+            ],
         ]);
     }
 
@@ -71,7 +77,7 @@ class ImportIds extends BaseImport
         })
         ->filter()
         ->each(function ($article) {
-            $success = $this->publishArticle($article, $article->medium);
+            $success = $this->publishArticle($article, $article->medium, $article->toPublication);
 
             if ($success) {
                 $this->completePending($article->id);
@@ -126,14 +132,17 @@ class ImportIds extends BaseImport
 
         $pending = Pending::where('imported', false)->where('skipped', false)->orderBy('id', 'ASC')->take($limit)->get();
 
-        $articles = $pending->map(function($article) {
+        $articles = $pending->map(function($pendingArticle) {
             try {
-                $apiUrlCall = 'lists/' . $article->article_id . '?include_content=true';
-                $response = $this->apiServices->get($article->site, 'DOSE')->makeRequest('GET', $apiUrlCall);
+                $apiUrlCall = 'lists/' . $pendingArticle->article_id . '?include_content=true';
+                $response = $this->apiServices->get($pendingArticle->site, 'DOSE')['client']->makeRequest('GET', $apiUrlCall);
 
-                return new Article($response['data']);
+                $article = new Article($response['data']);
+                $article->toPublication = $this->apiServices->get($pendingArticle->publication, 'DOSE')['publication'];
+
+                return $article;
             } catch (\Exception $e) {
-                $this->skipPending($article->article_id);
+                $this->skipPending($pendingArticle->article_id);
                 \Log::error($e->getMessage());
 
                 return;

@@ -19,6 +19,6 @@ class Pending extends Model
      * @var array
      */
     protected $fillable = [
-        'site', 'article_id', 'imported', 'skipped',
+        'site', 'publication', 'article_id', 'imported', 'skipped',
     ];
 }

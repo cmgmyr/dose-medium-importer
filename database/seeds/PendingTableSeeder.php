@@ -25,6 +25,7 @@ class PendingTableSeeder extends Seeder
             Pending::create([
                 'article_id' => trim($article[0]),
                 'site' => strtoupper(trim($article[1])),
+                'publication' => strtoupper(trim($article[2])),
             ]);
         });
     }
