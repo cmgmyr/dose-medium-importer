@@ -12,7 +12,7 @@ class Article extends Model
      * @var array
      */
     protected $fillable = [
-        'previous_id', 'original_date', 'medium_id', 'medium_url',
+        'previous_id', 'previous_url', 'original_date', 'medium_id', 'medium_url',
     ];
 
     /**

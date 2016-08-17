@@ -84,6 +84,7 @@ class Article extends BaseEntity
         return [
             'id'                     => 'required|integer',
             'page_title'             => 'required|string',
+            'permalink'              => 'required|string',
             'created_date'           => 'required|integer',
 
             'author_name'            => 'string',

@@ -113,6 +113,7 @@ class BaseImport extends Command
         } else {
             ArticleModel::create([
                 'previous_id' => $article->id,
+                'previous_url' => $article->permalink,
                 'original_date' => Carbon::createFromTimestamp($article->post_date),
                 'medium_id' => $post->data->id,
                 'medium_url' => $post->data->url,
